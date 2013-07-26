@@ -52,11 +52,12 @@ def create_folder(name):
 
 ################# Main ###########################
 if __name__ == '__main__':
-   
+    
+    print 'Loading csv dump file..'
     data = csv.reader(open('full_dump.csv', 'r')) # load the dump
     next(data, None) # skip the headers
     
-     # stores all the data
+    # stores all the data
     plot_data = {
         'platform': {},
         'obfuscation': {}, 
@@ -64,7 +65,8 @@ if __name__ == '__main__':
         'anchored': {'yes': [], 'no': [], 'invalid': []}
     }
     
-    for row in data: # iterate over the data
+    print 'Starting to build the dict...'
+    for num, row in enumerate(data): # iterate over the data
         platform = row[8].lower() # get platform for the email
         obfuscations = row[7].split(' | ') # get all obfuscations used as list
         clickable = row[5].lower() # get the clickable status
@@ -102,16 +104,17 @@ if __name__ == '__main__':
             else:
                 plot_data['obfuscation'][obfuscation] = [weeks]
         
-
-    plot_hist(plot_data, 'platform') # plot the histogram for platforms
-    plot_box(plot_data, 'platform') # plot the boxplot for platforms
+        if num % 1000 == 0:
+            print '\t%d rows parsed..' % num
     
-    plot_box(plot_data, 'obfuscation') # plot the boxplot for obfuscations
-    plot_hist(plot_data, 'obfuscation') # plot the histogram for obfuscations
+    print 'All rows parsed and data loaded as a dict...'
     
-    plot_box(plot_data, 'clickable') # plot the boxplot for clickable
-    plot_hist(plot_data, 'clickable') # plot the histogram for clickable
-    
-    plot_box(plot_data, 'anchored') # plot the boxplot for anchored
-    plot_hist(plot_data, 'anchored') # plot the histogram for anchored
+    print 'Start making graphs..'
+    for key in ['platform', 'obfuscation', 'clickable', 'anchored']:
+        plt.figure()
+        plot_hist(plot_data, key) # plot the histogram
+        plt.figure()
+        plot_box(plot_data, key) # plot the boxplot
+        
+    print 'All done!'
 ################# Main ###########################
