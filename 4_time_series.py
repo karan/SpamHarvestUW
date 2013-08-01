@@ -4,6 +4,7 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 from collections import defaultdict
 import matplotlib.dates as mdates
+import os
 ################# Imports ###########################
 
 
@@ -16,8 +17,20 @@ def plot_series(x, y):
     plt.title("Email spam time series")
     plt.ylabel("Number of emails")
     plt.grid(True)
+    plt.tight_layout()
+    create_folder("time_series")
+    fig = plt.gcf() # return reference to current figure
+    fig.set_size_inches(20,14)
+    plt.savefig('time_series/weekly.png', format='png', dpi=100)
     plt.show()
 
+def create_folder(name):
+    """
+    Creates a new directory with the passed name if it
+    doesn't exist.
+    """
+    if not os.path.exists(name):
+        os.makedirs(name)
 ################# Methods ###########################
 
 

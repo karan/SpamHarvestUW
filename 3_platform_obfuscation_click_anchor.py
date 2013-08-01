@@ -36,7 +36,7 @@ def plot_box(plot_data, top_key):
                  ['%s' % i for i in plot_data.keys()], rotation=80)
     plt.tight_layout()
     create_folder(top_key)
-    fig = plt.gcf()
+    fig = plt.gcf() # return reference to current figure
     fig.set_size_inches(20,14)
     plt.savefig(top_key + '/box_plot.png', format='png', dpi=100)
     
@@ -46,7 +46,7 @@ def create_folder(name):
     doesn't exist.
     """
     if not os.path.exists(name):
-        os.makedirs(name    )
+        os.makedirs(name)
 ################# Methods ###########################
 
 
