@@ -4,6 +4,8 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 from collections import defaultdict
 import matplotlib.dates as mdates
+from matplotlib.dates import WeekdayLocator
+from matplotlib.dates import DateFormatter
 import os
 ################# Imports ###########################
 
@@ -11,8 +13,17 @@ import os
 ################# Methods ###########################
 def plot_series(x, y):
     fig, ax = plt.subplots()
-    ax.plot_date(x, y, fmt='g--')
+    ax.plot_date(x, y, fmt='g-')
     
+    # For tickmarks and ticklabels every week
+    ax.xaxis.set_major_locator(WeekdayLocator(byweekday=1, interval=2))
+    
+    # For tickmarks (no ticklabel) every week
+    ax.xaxis.set_minor_locator(WeekdayLocator(byweekday=1))
+    
+    # for some reason this is needed to get the month displayed too
+    ax.xaxis.set_major_formatter(DateFormatter('%Y-%m-%d'))
+
     fig.autofmt_xdate()
     plt.title("Email spam time series")
     plt.ylabel("Number of emails")
