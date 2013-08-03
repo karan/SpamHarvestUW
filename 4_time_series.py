@@ -12,6 +12,12 @@ import os
 
 ################# Methods ###########################
 def plot_series(x, y):
+    """
+    Buils a time series where:
+    x = list of dates
+    y = list on number of emails
+    Interval is 2 weeks
+    """
     fig, ax = plt.subplots()
     ax.plot_date(x, y, fmt='g-')
     
@@ -37,6 +43,7 @@ def plot_series(x, y):
     
 def plot_hist(weeks_list):
     """
+    Builds a histogram for weeks after which spam email was received.
     """
     plt.title('Number of emails after x weeks of posting')
     plt.xlabel('Weeks after posting')
