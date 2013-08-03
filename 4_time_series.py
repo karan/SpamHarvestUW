@@ -34,6 +34,19 @@ def plot_series(x, y):
     fig.set_size_inches(20,14)
     plt.savefig('time_series/weekly.png', format='png', dpi=100)
     plt.show()
+    
+def plot_hist(weeks_to_emails):
+    """
+    """
+    plt.title('Number of emails after x weeks of posting')
+    plt.xlabel('Weeks after posting')
+    plt.ylabel('Number of emails')
+    plt.hist(weeks_to_emails, bins=60, alpha=0.5, histtype='bar')
+    create_folder("time_series")
+    fig = plt.gcf()
+    fig.set_size_inches(20,14)
+    plt.savefig('time_series/weekly_hist.png', format='png', dpi=100)
+    plt.show()
 
 def create_folder(name):
     """
@@ -52,17 +65,28 @@ if __name__ == '__main__':
     next(data, None) # skip the headers
     
     date_to_emails = defaultdict(int) # maps a date to num of emails received on the date
+    weeks_to_emails = [] # maps the difference in weeks between 
+                                       # received and posted date to num emails
     
     for num, row in enumerate(data): # iterate over the data
+        posted = row[1]
         received = row[2][5:-21] # get received date only
+        posted_fmt = '%m/%d/%Y %H:%M' # format of the timestamp
         rec_fmt = '%d %b %Y' # format of the timestamp
-        rec_date = mdates.date2num(datetime.strptime(received, rec_fmt)) # parse the timestamps as datetime objects
-        date_to_emails[rec_date] += 1
-    
+        posted_date = datetime.strptime(posted, posted_fmt) # parse the timestamps as datetime objects
+        rec_date = datetime.strptime(received, rec_fmt) # parse the timestamps as datetime objects
+        
+        delta = rec_date - posted_date
+        weeks = delta.total_seconds() / 60 / 60 / 24 / 7 # change seconds to weeks
+        
+        date_to_emails[mdates.date2num(rec_date)] += 1 # add received date to dict
+        weeks_to_emails.append(weeks)
     
     x = list(date_to_emails.keys()) # the dates
     y = list(date_to_emails.values()) # num of emails
     
     plot_series(x, y)
+    
+    plot_hist(weeks_to_emails)
     
 ################# Main ###########################
