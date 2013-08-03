@@ -35,13 +35,13 @@ def plot_series(x, y):
     plt.savefig('time_series/weekly.png', format='png', dpi=100)
     plt.show()
     
-def plot_hist(weeks_to_emails):
+def plot_hist(weeks_list):
     """
     """
     plt.title('Number of emails after x weeks of posting')
     plt.xlabel('Weeks after posting')
     plt.ylabel('Number of emails')
-    plt.hist(weeks_to_emails, bins=60, alpha=0.5, histtype='bar')
+    plt.hist(weeks_list, bins=60, alpha=0.5, histtype='bar')
     create_folder("time_series")
     fig = plt.gcf()
     fig.set_size_inches(20,14)
@@ -65,8 +65,7 @@ if __name__ == '__main__':
     next(data, None) # skip the headers
     
     date_to_emails = defaultdict(int) # maps a date to num of emails received on the date
-    weeks_to_emails = [] # maps the difference in weeks between 
-                                       # received and posted date to num emails
+    weeks_list = [] # stores weeks after posting that email was received
     
     for num, row in enumerate(data): # iterate over the data
         posted = row[1]
@@ -80,13 +79,13 @@ if __name__ == '__main__':
         weeks = delta.total_seconds() / 60 / 60 / 24 / 7 # change seconds to weeks
         
         date_to_emails[mdates.date2num(rec_date)] += 1 # add received date to dict
-        weeks_to_emails.append(weeks)
+        weeks_list.append(weeks)
     
     x = list(date_to_emails.keys()) # the dates
     y = list(date_to_emails.values()) # num of emails
     
     plot_series(x, y)
     
-    plot_hist(weeks_to_emails)
+    plot_hist(weeks_list)
     
 ################# Main ###########################
