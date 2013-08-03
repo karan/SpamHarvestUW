@@ -41,19 +41,19 @@ def plot_series(x, y):
     plt.savefig('time_series/weekly.png', format='png', dpi=100)
     plt.show()
     
-def plot_hist(weeks_list):
+def plot_hist(weeks_list, name):
     """
     Builds a histogram for weeks after which spam email was received.
     """
-    plt.title('Number of emails after x weeks of posting')
+    plt.title('Number of emails after x weeks of posting for platform: %s' % name)
     plt.xlabel('Weeks after posting')
     plt.ylabel('Number of emails')
-    plt.hist(weeks_list, bins=60, alpha=0.5, histtype='bar')
+    plt.hist(weeks_list, bins=60, alpha=0.5, histtype='step', fill=True)
     create_folder("time_series")
     fig = plt.gcf()
     fig.set_size_inches(20,14)
-    plt.savefig('time_series/weekly_hist.png', format='png', dpi=100)
-    plt.show()
+    plt.savefig('time_series/%s.png' % name, format='png', dpi=100)
+    #plt.show()
 
 def create_folder(name):
     """
@@ -73,8 +73,10 @@ if __name__ == '__main__':
     
     date_to_emails = defaultdict(int) # maps a date to num of emails received on the date
     weeks_list = [] # stores weeks after posting that email was received
+    weeks_by_platform = defaultdict(list) # maps platform to weeks
     
     for num, row in enumerate(data): # iterate over the data
+        platform = row[8].lower() # get platform for the email
         posted = row[1]
         received = row[2][5:-21] # get received date only
         posted_fmt = '%m/%d/%Y %H:%M' # format of the timestamp
@@ -87,12 +89,18 @@ if __name__ == '__main__':
         
         date_to_emails[mdates.date2num(rec_date)] += 1 # add received date to dict
         weeks_list.append(weeks)
+        weeks_by_platform[platform].append(weeks)
     
     x = list(date_to_emails.keys()) # the dates
     y = list(date_to_emails.values()) # num of emails
     
     plot_series(x, y)
     
-    plot_hist(weeks_list)
+    plot_hist(weeks_list, 'all_platforms')
+    
+    for platform in weeks_by_platform:
+        plt.figure()
+        plot_hist(weeks_by_platform[platform], platform)
+    
     
 ################# Main ###########################
