@@ -2,6 +2,7 @@
 import csv
 from datetime import datetime
 from collections import defaultdict
+from collections import OrderedDict
 import operator
 import os
 
@@ -63,7 +64,7 @@ def plot_weeks_times(data):
     """
     plt.figure()
     plt.bar(range(len(data)), data.values(), align='center')
-    plt.xticks(range(len(data)), data.keys(), fontsize=10)
+    plt.xticks(range(len(data)), data.keys(), fontsize=20)
     plt.title('Number of emails received each day of week')
     create_folder("time_series")
     fig = plt.gcf()
@@ -91,7 +92,15 @@ if __name__ == '__main__':
     date_to_emails = defaultdict(int) # maps a date to num of emails received on the date
     weeks_list = [] # stores weeks after posting that email was received
     weeks_by_platform = defaultdict(list) # maps platform to weeks
-    received_days = defaultdict(int) # stores the days on which email was received
+    received_days = OrderedDict([ # stores the days on which email was received
+                ('Mon', 0),
+                ('Tue', 0),
+                ('Wed', 0),
+                ('Thu', 0),
+                ('Fri', 0),
+                ('Sat', 0),
+                ('Sun', 0)
+        ])
         
     for num, row in enumerate(data): # iterate over the data
         platform = row[8].lower() # get platform for the email
@@ -118,10 +127,8 @@ if __name__ == '__main__':
     plot_series(x, y)
     
     plot_hist(weeks_list, 'all_platforms')
-    
-    sorted_days = dict(sorted(received_days.items(), key=lambda x:x[1]))
-    
-    plot_weeks_times(sorted_days)
+        
+    plot_weeks_times(received_days)
     
     for platform in weeks_by_platform:
         plt.figure()
