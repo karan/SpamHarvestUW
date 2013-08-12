@@ -64,11 +64,11 @@ def plot_weeks_times(data):
     plt.figure()
     plt.bar(range(len(data)), data.values(), align='center')
     plt.xticks(range(len(data)), data.keys(), fontsize=10)
-    plt.show()
-    #plt.figure()
-    #plt.hist(data.values())
-    #fig = plt.gcf()
-    #fig.set_size_inches(20,14)
+    plt.title('Number of emails received each day of week')
+    create_folder("time_series")
+    fig = plt.gcf()
+    fig.set_size_inches(20,14)
+    plt.savefig('time_series/weekday.png', format='png', dpi=100)
     #plt.show()
 
 
