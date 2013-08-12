@@ -1,12 +1,14 @@
 ################# Imports ###########################
 import csv
 from datetime import datetime
-import matplotlib.pyplot as plt
 from collections import defaultdict
+import operator
+import os
+
+import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.dates import WeekdayLocator
 from matplotlib.dates import DateFormatter
-import os
 ################# Imports ###########################
 
 
@@ -55,6 +57,21 @@ def plot_hist(weeks_list, name):
     plt.savefig('time_series/%s.png' % name, format='png', dpi=100)
     #plt.show()
 
+def plot_weeks_times(data):
+    """
+    Builds a histogram for weeks after which spam email was received.
+    """
+    plt.figure()
+    plt.bar(range(len(data)), data.values(), align='center')
+    plt.xticks(range(len(data)), data.keys(), fontsize=10)
+    plt.show()
+    #plt.figure()
+    #plt.hist(data.values())
+    #fig = plt.gcf()
+    #fig.set_size_inches(20,14)
+    #plt.show()
+
+
 def create_folder(name):
     """
     Creates a new directory with the passed name if it
@@ -74,7 +91,8 @@ if __name__ == '__main__':
     date_to_emails = defaultdict(int) # maps a date to num of emails received on the date
     weeks_list = [] # stores weeks after posting that email was received
     weeks_by_platform = defaultdict(list) # maps platform to weeks
-    
+    received_days = defaultdict(int) # stores the days on which email was received
+        
     for num, row in enumerate(data): # iterate over the data
         platform = row[8].lower() # get platform for the email
         posted = row[1]
@@ -90,6 +108,9 @@ if __name__ == '__main__':
         date_to_emails[mdates.date2num(rec_date)] += 1 # add received date to dict
         weeks_list.append(weeks)
         weeks_by_platform[platform].append(weeks)
+        
+        received_day = row[2][:3] # the day email was received
+        received_days[received_day] += 1
     
     x = list(date_to_emails.keys()) # the dates
     y = list(date_to_emails.values()) # num of emails
@@ -97,6 +118,10 @@ if __name__ == '__main__':
     plot_series(x, y)
     
     plot_hist(weeks_list, 'all_platforms')
+    
+    sorted_days = dict(sorted(received_days.items(), key=lambda x:x[1]))
+    
+    plot_weeks_times(sorted_days)
     
     for platform in weeks_by_platform:
         plt.figure()
