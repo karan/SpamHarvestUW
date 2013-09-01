@@ -16,6 +16,8 @@ def plot(key, stats):
     plt.savefig('classify_graphs/%s.png' % key, bbox_inches='tight')
     
 if __name__ == '__main__':
+    # File emails.csv
+    # Rows: Email, Clickable?, Anchored?, Obfuscation, Platform, Notes, Time
     data = csv.reader(open('emails.csv', 'r')) # Load the CSV
     next(data, None) # skip the header
 

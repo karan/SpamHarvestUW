@@ -3,11 +3,13 @@ This script will combine the dump.csv and email.csv
 files into a new full_dump.csv file which will have email
 properties.
 
-About 0.5% emails in the dump are never classified.
+About 0.5% emails in the dump are not classified.
 """
 
 import csv
 
+# dump.csv
+# Rows: Email, Timestamp, Timestamp, From, Subject
 dump = csv.reader(open('dump.csv', 'r'))
 next(dump, None)
 

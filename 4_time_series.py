@@ -86,6 +86,8 @@ def create_folder(name):
 ################# Main ###########################
 if __name__ == '__main__':
     print 'Loading csv dump file..'
+    # full_dump.csv
+    # Rows: Email, Posted, Received, From, Subject, Clickable, Anchored, Obfuscation, Platform, Notes
     data = csv.reader(open('full_dump.csv', 'r')) # load the dump
     next(data, None) # skip the headers
     
